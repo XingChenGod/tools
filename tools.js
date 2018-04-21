@@ -10,7 +10,63 @@ window.requestAnimationFrame = window.requestAnimationFrame || function (fn) {
 };
 window.cancelAnimationFrame = window.cancelAnimationFrame || clearTimeout;
 
-//倒计时的封装
+//时间的封装
+function time() {
+    var now = new Date();
+
+    var Year = now.getFullYear(),
+        Mouth = now.getMonth(),
+        Daily = now.getDate(),
+        Day = now.getDay(),//星期几
+        Hours = now.getHours(),
+        Minutes = now.getMinutes(),
+        Seconds = now.getSeconds();
+
+    //处理星期几，和月份,日,秒
+    Day = "星期"+["日","一","二","三","四","五","六"][Day];
+    Mouth = zero(Mouth+1);
+    Daily = zero(Daily);
+    Seconds = zero(Seconds);
+
+    return Year+","+Mouth+","+Daily+","+Hours+":"+Minutes+":"+Seconds;
+
+    //加零
+    function zero(a) {
+        return a<10?"0"+a:a;
+    }
+}
+
+//倒计时封装  指定时间，几年几月几日几时间.例如2018,5,1,10。2018年5月1号上午10点，对象装入倒计时文本
+function countDown(year,mouth,date,hours,text) {
+    var targetDate = new Date(year,mouth-1,date,hours);
+
+    var d,h,m,s;
+    setInterval(fn() , 1000)
+    function fn() {
+        var nowHours = new Date();
+        //转换毫秒
+        var mins = targetDate - nowHours;
+        //转换为秒.0的格式
+        mins = Math.floor(mins/1000);
+
+         d = Math.floor(mins/60/60/24);//天
+         h = Math.floor(mins/60/60)%24;//小时
+         m = Math.floor(mins/60)%60;//分
+         s = mins%60;//秒
+
+        d = zero(d);
+        h = zero(h);
+        m = zero(m);
+        s = zero(s);
+
+        text.innerHTML = d+"天"+h+"时"+m+"分"+s+"秒";
+        return fn;
+    }
+    //加零
+    function zero(a) {
+        return a<10?"0"+a:a;
+    }
+}
 
 //运动框架，时间版。对象，json格式的属性对应目标值，时间（可选），运动函数默认linear
 function move( obj , json , d , fn ) {
@@ -353,7 +409,7 @@ function ajax( json ){
     };
 }
 
-//cookie封装 set方式中 数据json格式，时间
+//cookie封装 set方式中 数据json格式，时间多少天
 var cookie = {
     Set : function ( dataJson , day ) {
         var d = new Date(new Date().getTime()+day*24*60*60*1000).toUTCString();
