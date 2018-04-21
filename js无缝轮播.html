@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>无缝轮播</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        list-style: none;
+    }
+    #box{
+        position: relative;
+        width: 490px;
+        height: 280px;
+        margin: 50px auto;
+    }
+    /*--设置pic部分的样式--*/
+    #box #pic{
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+    #box #pic ul{
+        position: absolute;
+        left: -490px;
+        top: 0px;
+        width: 1000%;
+        height: 100%;
+    }
+    #box #pic ul.transition{
+        transition: left .5s;
+    }
+    .clearfix{
+        content: "";
+        display: block;
+        clear: both;
+        height: 0px;
+        width: 0px;
+    }
+    #box #pic ul li{
+        float: left;
+        width: 10%;
+        height: 100%;
+    }
+    #box #pic ul li img{
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    /*--设置tab部分的样式--*/
+    #box #tab{
+        position: absolute;
+        left: 50%;
+        bottom: 10px;
+        margin-left: -40px;
+        overflow: hidden;
+        width: 80px;
+        height: 15px;
+    }
+    #box #tab ul{
+        width: 100%;
+        height: 100%;
+        border-radius: 7px;
+        text-align: center;
+        background-color: rgba(255,255,255,0.5);
+    }
+    #box #tab ul li{
+        float: left;
+        width: 10%;
+        height: 8px;
+        margin: 4px 6px;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,0.2);
+        cursor: pointer;
+    }
+    /*--设置btn部分--*/
+    #box #btn{
+        display: none;
+        position: absolute;
+        left: 0px;
+        top: 50%;
+        margin-top: -15px;
+        width: 100%;
+        height: 30px;
+        overflow: hidden;
+    }
+    #box #btn ul{
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    #box #btn ul li{
+        width: 30px;
+        height: 30px;
+        /*text-align: center;*/
+        line-height: 30px;
+        color: white;
+        border-radius: 10px/15px;
+        background-color: rgba(0,0,0,0.4);
+        cursor: pointer;
+    }
+    #box #btn ul li.left{
+        position: absolute;
+        left: -6px;
+        text-indent: 10px;
+    }
+    #box #btn ul li.right{
+        position: absolute;
+        right: -6px;
+        text-indent: 10px;
+    }
+    /*--鼠标划入box，btn出现--*/
+    #box:hover #btn{
+        display: block;
+    }
+    /*给tab增加类名*/
+    #box #tab ul li.on{
+        background-color: #fff910;
+    }
+</style>
+<body>
+    <div id="box">
+        <div id="pic">
+            <ul class="clearfix transition">
+                <li><a href=""><img src="images/m11.jpg" alt=""></a></li>
+                <li><a href=""><img src="images/m22.jpg" alt=""></a></li>
+                <li><a href=""><img src="images/m33.jpg" alt=""></a></li>
+                <li><a href=""><img src="images/m44.jpg" alt=""></a></li>
+            </ul>
+        </div>
+        <div id="tab">
+            <ul class="clearfix">
+                <li class="on"></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+        <div id="btn">
+            <ul>
+                <li class="left"> < </li>
+                <li class="right"> > </li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script>
+    var oBox = document.getElementById("box"),
+        aTab = document.getElementById("tab").getElementsByTagName("li"),
+        oPic = document.getElementById("pic").getElementsByTagName("ul")[0],
+        aLi = oPic.getElementsByTagName("li"),
+        lengthLi = aLi.length,
+        oLeft = document.getElementsByClassName("left")[0],
+        oRight = document.getElementsByClassName("right")[0];
+
+    //首位添加元素
+    console.log(aLi,lengthLi)
+    oPic.appendChild(aLi[0].cloneNode(true));
+    oPic.insertBefore(aLi[lengthLi-1].cloneNode(true) , aLi[0]);
+    //获取一些数据
+    var length = aTab.length,
+        index = 0,
+        Pwidth = getStyle(oBox),
+        pW = parseInt(Pwidth.width);
+
+    //点击tab
+    for (var i = 0;i < length;i++) {
+        //闭包
+        ~ function (i) {
+            aTab[i].onclick = function () {
+                //防止自己点击自己
+                // if (index !== i) {
+                //     // aTab[index].classList.remove("on");
+                //     //
+                //     // index = i;
+                //     // aTab[index].classList.add("on");
+                //     // oPic.style.left = "-"+i*pW+"px";
+                //     change(i);
+                // }
+                index !== i && change(i);
+            }
+        }(i);
+    }
+
+    //点击btn
+    var clickTime = 0;//处理点击鼠标的间隔时间
+    //点击右键
+    oRight.onclick = function () {
+        if (new Date() - clickTime > 500) {
+            var x = index + 1;
+            change(x);
+            clickTime = new Date;
+        }
+
+    };
+    //点击左键
+    oLeft.onclick = function () {
+        if (new Date() - clickTime > 500) {
+            change(index - 1);
+            clickTime = new Date;
+        }
+
+    };
+    //自动轮播
+    var t;
+    function autoBanner() {
+        t = setInterval(function () {
+            change(index + 1);
+        },1000);
+        return autoBanner
+    }
+    oBox.onmouseenter = function () {
+        clearInterval(t);
+    }
+    oBox.onmouseleave = autoBanner();
+    //封装一个添加类名，移动left的函数
+    function change(i) {
+        aTab[index].classList.remove("on");
+        index = i;
+        if (index >= length){
+            index = 0;
+            fn(1);
+        }
+        if (index < 0) {
+            index = length - 1;
+            fn(length);
+        }
+        aTab[index].classList.add("on");
+        oPic.style.left = -(i+1)*pW+"px";
+    }
+    //重置ul
+    function fn(x) {
+        setTimeout(function () {
+            oPic.classList.remove("transition");
+            oPic.style.left = -x*pW+"px";
+            setTimeout(function () {
+                oPic.classList.add("transition");
+            },20);
+        },500);
+    }
+    // function fn(x) {
+    //     //为了等动画完成之后再复位
+    //     setTimeout(function () {
+    //         oPic.classList.remove("transition");
+    //         oPic.style.left = "-"+x+"00%";
+    //         setTimeout(function () {
+    //             oPic.classList.add("transition");
+    //         },20);
+    //     },500);
+    // }
+
+    //获取样式
+    function getStyle(obj) {
+        return obj.currentStyle || getComputedStyle(obj)
+    }
+</script>
+</html>

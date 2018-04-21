@@ -425,6 +425,3 @@ var cookie = {
         this.Set(obj, -1);
     }
 };
-
-
-//无缝轮播的封装
