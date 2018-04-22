@@ -4,6 +4,48 @@ function getCss(obj) {
 }
 //getCss(obj).属性
 
+// 要想获取 ,必须先去设置,transform样式,单一属性设置和获取
+function cssTransform(obj,attr,val) {
+    if( !obj.transform ) {
+        obj.transform = {};
+    }
+    if( arguments.length ===3 ){  // 3个参数 设置
+        obj.transform[attr] = val;
+        var strVal = '';
+        for ( var key in obj.transform ){
+            switch ( key ){
+                case 'rotate':
+                case 'rotateX':
+                case 'rotateY':
+                    strVal += key + '('+obj.transform[key]+'deg) ';
+                    break;
+                case 'translate':
+                case 'translateX':
+                case 'translateY':
+                    strVal += key + '('+obj.transform[key]+'px) ';
+                    break;
+                case 'scale':
+                case 'scaleX':
+                case 'scaleY':
+                    strVal += key + '('+obj.transform[key]+') ';
+                    break;
+            }
+            obj.style.transform = strVal;
+        }
+
+    }else{ // 2个参数 获取
+        val = obj.transform[attr];
+        if( typeof val === 'undefined'){
+            if( attr === 'scale' || attr === 'scaleX' || attr === 'scaleY' ){
+                val = 1;
+            }else{
+                val = 0;
+            }
+        }
+        return val;
+    }
+}
+
 //requestAnimationFrame
 window.requestAnimationFrame = window.requestAnimationFrame || function (fn) {
     return setTimeout(fn , 1000/60)
