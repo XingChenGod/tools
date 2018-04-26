@@ -4,6 +4,21 @@ function getCss(obj) {
 }
 //getCss(obj).属性
 
+//getElementsByClassName的兼容
+if (!document.getElementsByClassName) {
+    document.getElementsByClassName = function (classNames) {
+        var ele = document.getElementsByTagName("*");
+        var arry = [];
+        var reg = new RegExp("\\b"+classNames+"\\b");
+        for (var i = 0,length = arry.length;i < length;i++) {
+            if (reg.test(ele)) {
+                arry.push(ele.match(reg));
+            }
+        }
+        return arry;
+    };
+}
+
 // 要想获取 ,必须先去设置,transform样式,单一属性设置和获取
 function cssTransform(obj,attr,val) {
     if( !obj.transform ) {
