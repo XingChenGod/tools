@@ -482,3 +482,11 @@ var cookie = {
         this.Set(obj, -1);
     }
 };
+
+//深度克隆
+function deepClone(obj) {
+    var o = obj instanceof Array ? [] : {};
+    for(var k in obj)
+        o[k] = typeof obj[k] === Object ? clone(obj[k]) : obj[k];
+    return o;
+}
