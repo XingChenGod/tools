@@ -302,54 +302,54 @@ function move( obj , json , d , fn ) {
 }
 
 //事件绑定的封装    节点对象 ，事件名 ，事件函数
-function addEvent( obj , eName , eFn ){
-    function fn(e){
+function addEvent(obj, eName, eFn) {
+    function fn(e) {
         e = e || window.event;
         eFn.call(obj,e);
     }
-    if ( !obj.Event ){
+    if ( !obj.Event ) {
         obj.Event = {};
     }
-    if ( !obj.Event[eName] ){
+    if (!obj.Event[eName]) {
         obj.Event[eName] = [];
     }
     obj.Event[eName].push(fn);//为了方便解绑
-    if ( document.addEventListener ){
+    if (document.addEventListener) {
         obj.addEventListener(eName , fn , false);
-    }else{
-        obj.attachEvent( "on"+eName , fn );
+    } else {
+        obj.attachEvent('on' + eName, fn);
     }
     return fn;
 }
 
 //解绑
-function removeEvent( obj , eName , fn ){
+function removeEvent(obj, eName, fn) {
 
-    if ( obj.Event && obj.Event[eName] ){
-        var arr = obj.Event[eName];
-        if ( fn ){
+    if (obj.Event && obj.Event[eName]) {
+        let arr = obj.Event[eName];
+        if (fn) {
             var index = -1;
-            for (var i = 0,length=arr.length; i < length; i++) {
+            for (let i = 0,length=arr.length; i < length; i++) {
                 if ( arr[i] === fn ){
                     index = i;
                     break;
                 }
             }
-            if ( index !== -1 ){
+            if (index !== -1 ) {
                 obj.Event[eName].splice(index,1);
-                if ( document.addEventListener ){
+                if (document.addEventListener) {
                     obj.removeEventListener(eName , fn , false);
-                }else{
-                    obj.detachEvent( "on"+eName , fn );
+                } else {
+                    obj.detachEvent('on'+eName, fn);
                 }
             }
-        }else{
-            if ( arr.length ){
-                for (i = 0,length=arr.length; i < length; i++) {
+        } else {
+            if (arr.length) {
+                for (i = 0, length = arr.length; i < length; i++) {
                     if ( document.addEventListener ){
-                        obj.removeEventListener(eName , arr[i] , false);
+                        obj.removeEventListener(eName, arr[i] , false);
                     }else{
-                        obj.detachEvent( "on"+eName , arr[i] );
+                        obj.detachEvent('on'+eName, arr[i]);
                     }
                 }
             }
@@ -363,10 +363,10 @@ function removeEvent( obj , eName , fn ){
 // addWheelEvent(oBox , function (e , d) {
    // console.log( d );//判断d的正负就知道滚轮的方向
 //});
-function addWheelEvent( obj , eFn ){
-    document.addEventListener?obj.addEventListener(document.createElement("div").onmousewheel===null?"mousewheel":"DOMMouseScroll",fn,false):obj.attachEvent("onmousewheel",fn);
-    function fn(e){
-        if ( eFn.call(obj , e = e || window.event , e.wheelDelta/120 || -e.detail/3) === false ){
+function addWheelEvent(obj, eFn) {
+    document.addEventListener ? obj.addEventListener(document.createElement("div").onmousewheel === null ? 'mousewheel' : 'DOMMouseScroll', fn, false) : obj.attachEvent('onmousewheel', fn);
+    function fn(e) {
+        if (eFn.call(obj, e = e || window.event, e.wheelDelta/120 || -e.detail/3) === false) {
             e.preventDefault && e.preventDefault();
             return false;
         }
@@ -380,7 +380,7 @@ function addWheelEvent( obj , eFn ){
                5-11位
                纯数字
             */
-var qq = /^[1-9]\d{4,10}$/;
+let qq = /^[1-9]\d{4,10}$/;
 
 
 /*
@@ -390,7 +390,7 @@ var qq = /^[1-9]\d{4,10}$/;
     11位
 
  */
-var tel = /^1[3-9]\d{9}$/;  //手机号
+let tel = /^1[3-9]\d{9}$/;  //手机号
 
 /*
 用户名：
@@ -398,21 +398,21 @@ var tel = /^1[3-9]\d{9}$/;  //手机号
     必须以字母开头
     6 <= n <= 16
  */
-var user = /^[a-z]\w{5,15}$/i;
+let user = /^[a-z]\w{5,15}$/i;
 
 /*
 密码：
     ~!@#$%^&*()+{}[]:"|',.?*-+/
     6 <= n <= 16
  */
-var pwd = /^[\w~!@#$%^&*()+{}[\]:"|',.?\-/]{6,16}$/;
+let pwd = /^[\w~!@#$%^&*()+{}[\]:"|',.?\-/]{6,16}$/;
 
 /*
 邮箱：
     xxxxx@xxx.com.cn
     前面的用户名 \w
  */
-var mail = /^[1-9a-z]\w+@[0-9a-z\-]{2,}(\.[a-z]{2,}){1,2}$/i;
+let mail = /^[1-9a-z]\w+@[0-9a-z\-]{2,}(\.[a-z]{2,}){1,2}$/i;
 
 /*
 身份证：
@@ -420,7 +420,7 @@ var mail = /^[1-9a-z]\w+@[0-9a-z\-]{2,}(\.[a-z]{2,}){1,2}$/i;
     不能以0开头
     最后一位可能是x
  */
-var IDCard = /^[1-9]\d{5}(19\d{2}|20[01]\d)(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])\d{3}[\dxX]$/;
+let IDCard = /^[1-9]\d{5}(19\d{2}|20[01]\d)(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])\d{3}[\dxX]$/;
 
 //ajax封装
 /*参数json所需要的属性：
@@ -431,8 +431,8 @@ var IDCard = /^[1-9]\d{5}(19\d{2}|20[01]\d)(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01
 * success : function 可缺省，代表成功的回调函数，该函数第一个形参代表后台返回的数据
 * error ：function 可缺省，代表失败的回调函数，该函数的第一个形参代表请求的HTTP状态码
 */
-function ajax( json ){
-    var type = json.type || "GET",
+function ajax(json) {
+    let type = json.type || "GET",
         url = json.url,
         aysn = json.aysn !== false,
         data = json.data,
@@ -440,8 +440,8 @@ function ajax( json ){
         error = json.error;
     //将json格式的data处理成string格式
     data = data && (function () {
-        var dataStr = "";
-        for (var key in data) dataStr += key + "=" + data[key] + "&";
+        let dataStr = "";
+        for (let key in data) dataStr += key + "=" + data[key] + "&";
         return dataStr;
     })();
     //让get请求的url后面跟上数据
@@ -450,34 +450,34 @@ function ajax( json ){
         data = undefined;
     }
     //ajax主体
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.open( type , url , aysn );
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send( data );
     xhr.onreadystatechange = function () {
-        if ( this.readyState === 4 ){
-            var status = this.status;
-            if ( status >= 200 && status < 300 ){
-                success && success( this.responseText );
+        if (this.readyState === 4) {
+            let status = this.status;
+            if (status >= 200 && status < 300) {
+                success && success(this.responseText);
             }else{
-                error && error( status );
+                error && error(status);
             }
         }
     };
 }
 
 //cookie封装 set方式中 数据json格式，时间多少天
-var cookie = {
-    Set : function ( dataJson , day ) {
-        var d = new Date(new Date().getTime()+day*24*60*60*1000).toUTCString();
-        for (var key in dataJson)document.cookie = key+"="+dataJson[key]+"; expires="+d;
+let cookie = {
+    Set: function ( dataJson , day ) {
+        let d = new Date(new Date().getTime() + day*24*60*60*1000).toUTCString();
+        for (var key in dataJson)document.cookie = key+"="+dataJson[key]+"; expires=" + d;
     },
-    Get : function (attr) {
-        var value = document.cookie.match( new RegExp( "\\b"+attr+"=([^;]+)(;|$)" ) );
-        return value?value[1]:"";
+    Get: function (attr) {
+        let value = document.cookie.match(new RegExp("\\b" + attr + "=([^;]+)(;|$)"));
+        return value ? value[1] : "";
     },
-    Remove : function (attr) {
-        var obj = {};
+    Remove: function (attr) {
+        let obj = {};
         obj[attr] = "";
         this.Set(obj, -1);
     }
@@ -485,8 +485,9 @@ var cookie = {
 
 //深度克隆
 function deepClone(obj) {
-    var o = obj instanceof Array ? [] : {};
-    for(var k in obj)
-        o[k] = typeof obj[k] === Object ? clone(obj[k]) : obj[k];
+    let o = obj instanceof Array ? [] : {};
+    for(var k in obj) {
+      o[k] = typeof obj[k] === Object ? clone(obj[k]) : obj[k];
+    }
     return o;
 }
